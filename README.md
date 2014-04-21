@@ -10,6 +10,6 @@ Tidepool mobile app
 3. Run the following commands
 ```
 git init
-git remote add origin git@github.com:lijingyics/Tidepool_Mobile.git
+git remote add origin git@github.com:wengia/tidepool_server.git
 git pull origin master
 ```
