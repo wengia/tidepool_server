@@ -23,7 +23,7 @@ public class ServerNode {
         Thread clientThread = new Thread(client);
         
         clientThread.start();
-        allClients.put(client.getEmail(), client);
+        //allClients.put(client.getEmail(), client);
 	}
 	
 	public void close() throws Exception {
@@ -42,17 +42,67 @@ public class ServerNode {
 	
 	public class ServerClient implements Runnable {
 		private Socket client;
+		private ObjectOutputStream out;
+		private ObjectInputStream in;
 		
 		public ServerClient(Socket sock) {
 			client = sock;
+			try {
+				out = new ObjectOutputStream( client.getOutputStream() );
+				in = new ObjectInputStream( client.getInputStream() );
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+		
+		public void close() {
+			try {
+				in.close();
+				out.close();
+				client.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		
 		public String getEmail() {
-			return "";
+			String email = "test";
+			
+			try {
+				email = (String) in.readObject();
+			} catch (ClassNotFoundException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println("email is " + email);
+			return email;
+		}
+		
+		public void sendMsg() {
+			try {
+				out.writeObject("I hear!");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		public void run() {
-			
+			String tmp = null;
+			try {
+				tmp = (String) in.readObject();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println(tmp);
 		}
 	}
 }
