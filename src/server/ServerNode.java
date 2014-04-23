@@ -6,10 +6,15 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.HashMap;
 
+import dbLayout.TidepoolDatabase;
+import entities.User;
+
 public class ServerNode {
     private int port;
 	private ServerSocket serverSocket = null;
 	private HashMap<String, ServerClient> allClients = null;
+	
+	private TidepoolDatabase db = new TidepoolDatabase();
 	
 	public ServerNode( int p ) { port = p; }
 	
@@ -44,6 +49,8 @@ public class ServerNode {
 		private Socket client;
 		private ObjectOutputStream out;
 		private ObjectInputStream in;
+		
+		private User user = new User();
 		
 		public ServerClient(Socket sock) {
 			client = sock;
@@ -91,8 +98,16 @@ public class ServerNode {
 			}
 		}
 		
+		private void getUser() {
+			user = db.getUser("dummy1@gmail.com");
+			if(user!=null)
+				System.out.println(user.getId() + " " + user.getUsername());
+		}
+		
 		public void run() {
 			String tmp = null;
+			
+			getUser();
 			try {
 				tmp = (String) in.readObject();
 			} catch (ClassNotFoundException e) {

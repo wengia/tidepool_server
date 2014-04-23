@@ -45,6 +45,11 @@ public class TidepoolDatabase {
 		return data;
 	}
 	
+	/**
+	 * Find all friends of one user
+	 * @param uid
+	 * @return friends
+	 */
 	public ArrayList<User> getFriends(int uid) {
 		return adapter.selectFriends(uid);
 	}
