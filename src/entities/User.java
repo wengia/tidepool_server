@@ -5,6 +5,10 @@ import java.util.Date;
 
 
 public class User implements Serializable {
+	/**
+	 * The entity for user table
+	 */
+	private static final long serialVersionUID = 2086857528290057321L;
 	private long id;
 	private String email;
 	private String username;
