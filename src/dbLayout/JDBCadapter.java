@@ -168,10 +168,98 @@ public class JDBCadapter {
 		return userList;
 	}
 	
-	// Insert new User
+	/**
+	 * Insert new User
+	 * If the user has not been created, the return will be -1.
+	 * @param user
+	 * @return user_id
+	 */
+	public int insertUser(User user) {
+		int id = -1;
+		String query = "INSERT IGNORE INTO myUser"
+				+ "(email, username, pwd, phone, birth, gender, role) VALUES"
+				+ "(?,?,?,?,?,?,?)";
+
+		try {
+			preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setString(1, user.getEmail());
+			preparedStatement.setString(2, user.getUsername());
+			preparedStatement.setString(3, user.getPassword());
+			preparedStatement.setString(4, user.getPhoneNo());
+			preparedStatement.setDate(5, (Date) user.getDateOfBirth());
+			preparedStatement.setString(6, user.getGender());
+			preparedStatement.setString(7, user.getRole());
+
+			// execute insert SQL statement
+			preparedStatement.executeUpdate();
+			
+			// return the auto generated key
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+            if(rs.next())
+                id = rs.getInt(1);
+            System.out.println("Record is inserted into myUser table!");
+    		    
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return id;
+	}
 	
-	// Insert new friends relationship
+	/**
+	 * Insert new friends relationship.
+	 * In the table, first id < second id
+	 * Return -1 if not inserting successfully.
+	 * @param id1
+	 * @param id2
+	 * @return friends_id
+	 */
+	public int insertFriends(long id1, long id2) {
+		int id = -1;
+		String query = "INSERT IGNORE INTO friends"
+				+ "(uid1, uid2) VALUES"
+				+ "(?,?)";
+
+		try {
+			preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setLong(1, (id1<id2? id1:id2));
+			preparedStatement.setLong(2, (id1>id2? id1:id2));
+
+			// execute insert SQL statement
+			preparedStatement.executeUpdate();
+			
+			// return the auto generated key
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+            if(rs.next())
+                id = rs.getInt(1);
+            System.out.println("Record is inserted into friends table!");
+    		    
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return id;
+	}	
+	
 	
 	// Delete friends relationship
+	public void deleteFriends(long friends_id) {
+		String query = "DELETE FROM friends WHERE id=?";
+
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setLong(1, friends_id);
+
+			// execute insert SQL statement
+			preparedStatement.executeUpdate();
+			System.out.println("Delete one data in friends table!");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 }

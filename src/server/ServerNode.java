@@ -51,6 +51,7 @@ public class ServerNode {
 		private ObjectInputStream in;
 		
 		private User user = new User();
+		private String email=null;
 		
 		public ServerClient(Socket sock) {
 			client = sock;
@@ -75,9 +76,7 @@ public class ServerNode {
 			
 		}
 		
-		public String getEmail() {
-			String email = "test";
-			
+		public void getEmail() {
 			try {
 				email = (String) in.readObject();
 			} catch (ClassNotFoundException | IOException e) {
@@ -86,7 +85,6 @@ public class ServerNode {
 			}
 			
 			System.out.println("email is " + email);
-			return email;
 		}
 		
 		public void sendMsg() {
@@ -98,10 +96,22 @@ public class ServerNode {
 			}
 		}
 		
-		private void getUser() {
-			user = db.getUser("dummy1@gmail.com");
-			if(user!=null)
+		private boolean getUser() {
+			user = db.getUser(email);
+			if(user!=null) {
 				System.out.println(user.getId() + " " + user.getUsername());
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public void signin() {
+			
+		}
+		
+		public void register() {
+			
 		}
 		
 		public void run() {
@@ -109,7 +119,17 @@ public class ServerNode {
 			
 			getUser();
 			try {
-				tmp = (String) in.readObject();
+				System.out.println("Start connection!");
+				while((tmp = (String) in.readObject())!=null){
+					if(tmp.equalsIgnoreCase("signout")) break;
+					
+					if(tmp.equalsIgnoreCase("signin")) signin();
+					if(tmp.equalsIgnoreCase("register")) register();
+				}
+				
+				allClients.remove(email);
+				close();
+				System.out.println("Close connection!");
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
