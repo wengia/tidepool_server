@@ -54,6 +54,34 @@ public class TidepoolDatabase {
 		return adapter.selectFriends(uid);
 	}
 	
+	/**
+	 * Add new user to database
+	 * Return -1 if the user has existed.
+	 * @param user
+	 * @return user_id
+	 */
+	public int addUser(User user) {
+		return adapter.insertUser(user);
+	}
+	
+	/**
+	 * Add the friends relationship in the friend table
+	 * @param user_id
+	 * @param friend_id
+	 */
+	public void addFriend(long user_id, long friend_id) {
+		adapter.insertFriends(user_id, friend_id);
+	}
+	
+	/**
+	 * Delete the friends relationship in the friend table
+	 * @param id1
+	 * @param id2
+	 */
+	public void deleteFriends(long id1, long id2) {
+		adapter.deleteFriends(id1, id2);
+	}
+	
 	public void close() throws SQLException {
 		adapter.close();
 	}

@@ -245,12 +245,13 @@ public class JDBCadapter {
 	
 	
 	// Delete friends relationship
-	public void deleteFriends(long friends_id) {
-		String query = "DELETE FROM friends WHERE id=?";
+	public void deleteFriends(long id1, long id2) {
+		String query = "DELETE FROM friends WHERE uid1=? AND uid2=?";
 
 		try {
 			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setLong(1, friends_id);
+			preparedStatement.setLong(1, (id1<id2? id1:id2));
+			preparedStatement.setLong(2, (id1>id2? id1:id2));
 
 			// execute insert SQL statement
 			preparedStatement.executeUpdate();
