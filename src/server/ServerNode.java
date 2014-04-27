@@ -6,8 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.HashMap;
 
+import com.tidepool.entities.User;
+
 import dbLayout.TidepoolDatabase;
-import entities.User;
 
 public class ServerNode {
     private int port;

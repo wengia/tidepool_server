@@ -1,12 +1,16 @@
 package dbLayout;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
-import entities.Data;
-import entities.User;
+import com.tidepool.entities.Data;
+import com.tidepool.entities.User;
+
 
 
 public class JDBCadapter {
@@ -186,7 +190,7 @@ public class JDBCadapter {
 			preparedStatement.setString(2, user.getUsername());
 			preparedStatement.setString(3, user.getPassword());
 			preparedStatement.setString(4, user.getPhoneNo());
-			preparedStatement.setDate(5, (Date) user.getDateOfBirth());
+			preparedStatement.setDate(5, convertToSqlDate(user.getDateOfBirth()));
 			preparedStatement.setString(6, user.getGender());
 			preparedStatement.setString(7, user.getRole());
 
@@ -195,10 +199,13 @@ public class JDBCadapter {
 			
 			// return the auto generated key
 			ResultSet rs = preparedStatement.getGeneratedKeys();
-            if(rs.next())
+            if(rs.next()){
                 id = rs.getInt(1);
-            System.out.println("Record is inserted into myUser table!");
-    		    
+                System.out.println("Record is inserted into myUser table!");
+            }
+            else
+            	System.out.println("Fail to inserted record into myUser table!");
+            
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -263,4 +270,12 @@ public class JDBCadapter {
 
 	}
 
+	/**
+	 * Convert util.Date to sql.Date
+	 * @param util.Date
+	 * @return sql.Date
+	 */
+	private java.sql.Date convertToSqlDate(java.util.Date date) {
+	    return new java.sql.Date(date.getTime());
+	}
 }

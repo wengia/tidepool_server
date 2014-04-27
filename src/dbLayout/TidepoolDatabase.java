@@ -3,8 +3,9 @@ package dbLayout;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import entities.Data;
-import entities.User;
+import com.tidepool.entities.Data;
+import com.tidepool.entities.User;
+
 
 
 public class TidepoolDatabase {
