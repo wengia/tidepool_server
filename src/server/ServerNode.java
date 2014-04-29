@@ -128,6 +128,7 @@ public class ServerNode {
 				// Save and send back the User
 				allClients.put(email, this);
 				out.writeObject(user);
+				System.out.println("signin success!");
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

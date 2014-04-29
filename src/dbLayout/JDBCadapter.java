@@ -97,7 +97,7 @@ public class JDBCadapter {
 				Data data = new Data();
 				
 				data.setId(rs.getInt("id"));
-				data.setTime(rs.getDate("theTime"));
+				data.setTime(rs.getTimestamp("theTime"));
 				data.setBg(rs.getInt("BG"));
 				data.setInsulin(rs.getInt("insulin"));
 				data.setUserId(user_id);
@@ -131,11 +131,11 @@ public class JDBCadapter {
 	
 	private ArrayList<User> selectFriends( int user_id, boolean right ) {
 		ArrayList<User> userList = new ArrayList<User>();
-		String query1 = "select * from myUser a" +
-				"inner join friends b on a.id=b.uid1" + 
+		String query1 = "select * from myUser a " +
+				"inner join friends b on a.id=b.uid1 " + 
 				"where b.uid2 = ?";
-		String query2 = "select * from myUser a" +
-				"inner join friends b on a.id=b.uid2" + 
+		String query2 = "select * from myUser a " +
+				"inner join friends b on a.id=b.uid2 " + 
 				"where b.uid1 = ?";
 		
 		try {
