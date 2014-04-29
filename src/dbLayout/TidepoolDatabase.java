@@ -66,6 +66,15 @@ public class TidepoolDatabase {
 	}
 	
 	/**
+	 * Update the user
+	 * @param user
+	 * @return 1 - success; 0 - no update; -1 - error like duplicated name or email
+	 */
+	public int updateUser(User user) {
+		return adapter.updateUser(user);
+	}
+	
+	/**
 	 * Add the friends relationship in the friend table
 	 * @param user_id
 	 * @param friend_id

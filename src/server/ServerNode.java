@@ -32,6 +32,7 @@ public class ServerNode {
 	}
 	
 	public void close() throws Exception {
+		db.close();
 		serverSocket.close();
 	}
 	
@@ -152,10 +153,29 @@ public class ServerNode {
 					return;
 				}
 				
-				// Save and send back the message
+				// Save and send back the user id
 				user.setId(id);
 				allClients.put(email, this);
-				out.writeObject("success");
+				out.writeObject(id);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		public void update() {
+			try {
+				// Receive the user
+				out.writeObject("update user");
+				user = (User) in.readObject();
+				
+				// Add the user
+				int res = db.updateUser(user);
+				out.writeObject(res);
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -281,6 +301,7 @@ public class ServerNode {
 					
 					if(tmp.equalsIgnoreCase("signin")) signin();
 					if(tmp.equalsIgnoreCase("register")) register();
+					if(tmp.equalsIgnoreCase("updateUser")) update();
 					if(tmp.equalsIgnoreCase("sendData")) sendData();
 					if(tmp.equalsIgnoreCase("sendFriends")) sendFriends();
 					if(tmp.equalsIgnoreCase("chat")) sendMsgProcess();

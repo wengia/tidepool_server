@@ -248,10 +248,47 @@ public class JDBCadapter {
 		}
 
 		return id;
-	}	
+	}
 	
+	/**
+	 * Update the user
+	 * Return 0 if no row has been changed
+	 * @param user
+	 * @return row count
+	 */
+	public int updateUser(User user) {
+		int ps = -1;
+		String query = "UPDATE myUser SET "
+				+ "email = ?, username = ?, pwd = ?, phone = ?, birth = ?, gender = ?, role =? "
+				+ "WHERE id = ?";
+
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, user.getEmail());
+			preparedStatement.setString(2, user.getUsername());
+			preparedStatement.setString(3, user.getPassword());
+			preparedStatement.setString(4, user.getPhoneNo());
+			preparedStatement.setDate(5, convertToSqlDate(user.getDateOfBirth()));
+			preparedStatement.setString(6, user.getGender());
+			preparedStatement.setString(7, user.getRole());
+			preparedStatement.setLong(8, user.getId());
+			
+			// execute insert SQL statement
+			ps = preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ps;	
+	}
 	
-	// Delete friends relationship
+	/**
+	 * Delete friends relationship
+	 * @param id1
+	 * @param id2
+	 */
 	public void deleteFriends(long id1, long id2) {
 		String query = "DELETE FROM friends WHERE uid1=? AND uid2=?";
 
