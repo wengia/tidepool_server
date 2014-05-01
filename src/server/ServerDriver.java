@@ -2,6 +2,7 @@ package server;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import com.tidepool.entities.User;
 
@@ -12,14 +13,14 @@ public class ServerDriver {
 		ServerNode server = new ServerNode(5555);
 		server.run();
 		
-		//new ServerDriver().testDB();
+		// new ServerDriver().testDB();
 	}
 	
 	public void testDB() {
 		TidepoolDatabase db = new TidepoolDatabase();
 		
 		// Insert User
-		User userDummy = new User();
+		/*User userDummy = new User();
 		userDummy.setId(6);
 		userDummy.setEmail("becky@gmail.com");
 		userDummy.setGender("female");
@@ -39,6 +40,30 @@ public class ServerDriver {
 		// Update user;
 		userDummy.setUsername("becky");
 		int res = db.updateUser(userDummy);
-		System.out.println(res);
+		System.out.println(res);*/
+		
+		// Contact sending requests
+		int tmp;
+		tmp = db.sendRequest(2,1);
+		System.out.println("Send 2 to 1: " + tmp);
+		tmp = db.sendRequest(2,3);
+		System.out.println("Send 2 to 3: " + tmp);
+		
+		ArrayList<User> r1 = db.getRequest(1);
+		System.out.println("get " + r1.size());
+		
+		ArrayList<User> r2 = db.getRequest(2);
+		System.out.println("get " + r2.size());
+		
+		db.setRespond(2, 1, "admit");
+		db.setRespond(2, 3, "refuse");
+		
+		r2 = db.getRespond(2);
+		System.out.println("get " + r2.size());
+		
+		
+		// Delete Friends
+		db.deleteFriends(1,2);
+		
 	}
 }

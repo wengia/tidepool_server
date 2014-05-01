@@ -2,9 +2,11 @@
 
 create schema if not exists tidepool;
 
-drop table if exists tidepool.friends;
+/*drop table if exists tidepool.friends;
 drop table if exists tidepool.myData;
 drop table if exists tidepool.myUser;
+*/
+drop table if exists tidepool.contact;
 
 create table if not exists tidepool.myUser (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -51,6 +53,26 @@ create table if not exists tidepool.friends (
 	UNIQUE (uid1, uid2)
 );
 
+create table if not exists tidepool.contact (
+	contact_id INT Not NULL AUTO_INCREMENT,
+	sender INT Not NULL,
+	receiver INT Not NULL,
+	theStatus VARCHAR(10),
+
+	PRIMARY KEY (contact_id),
+
+	FOREIGN KEY (sender)
+	  REFERENCES myUser(id)
+	  ON UPDATE CASCADE ON DELETE CASCADE,
+
+	FOREIGN KEY (receiver)
+      REFERENCES myUser(id)
+	  ON UPDATE CASCADE ON DELETE CASCADE,
+
+	UNIQUE (sender, receiver)
+);
+
+/*
 insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
 value (1 ,'dummy1@gmail.com', 'dummy1', 'pwd', '1234567890', '1985-07-06', 'female', 'patient');
 insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
@@ -133,3 +155,4 @@ value ('2014-04-22 7:45', 180, 0, 3);
 insert ignore into tidepool.friends (uid1, uid2) value (2, 4);
 insert ignore into tidepool.friends (uid1, uid2) value (3, 4);
 insert ignore into tidepool.friends (uid1, uid2) value (4, 5);
+*/
