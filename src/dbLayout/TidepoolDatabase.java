@@ -92,6 +92,47 @@ public class TidepoolDatabase {
 		adapter.deleteFriends(id1, id2);
 	}
 	
+	/**
+	 * Sender sends add friend request
+	 * @param sId
+	 * @param rId
+	 * @return affected row count
+	 */
+	public int sendRequest(long sId, long rId) {
+		return adapter.insertContact(sId, rId);
+	}
+	
+	/**
+	 * Receiver get requests from sender
+	 * @param rId
+	 * @return senders
+	 */
+	public ArrayList<User> getRequest(int rId) {
+		return adapter.selectSender( rId );
+	}
+	
+	/**
+	 * Receiver gives respond, either "admit" or "refuse"
+	 * @param sId
+	 * @param rId
+	 * @param status
+	 * @return affected row count
+	 */
+	public int setRespond(long sId, long rId, String status) {
+		return adapter.updateContact(sId, rId, status);
+	}
+	
+	/**
+	 * Sender gets respond from receiver.
+	 * If status = "admit" return the user with full columns.
+	 * If status = "refuse" return the user only with username.
+	 * @param sId
+	 * @return receivers
+	 */
+	public ArrayList<User> getRespond(int sId) {
+		return adapter.selectReceiver( sId );
+	}
+	
 	public void close() throws SQLException {
 		adapter.close();
 	}

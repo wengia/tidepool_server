@@ -173,6 +173,106 @@ public class JDBCadapter {
 	}
 	
 	/**
+	 * Sender get receivers' respond
+	 * If status = "admit" return the user with full columns.
+	 * If status = "refuse" return the user only with username.
+	 * @param sender_id
+	 * @return receivers
+	 */
+	public ArrayList<User> selectReceiver( int sender_id ) {
+		ArrayList<User> userList = new ArrayList<User>();
+		String query = "select * from myUser a " +
+				"inner join contact b on a.id=b.receiver " + 
+				"where not b.theStatus=\'wait\' and b.sender = ?";
+		
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, sender_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			while( rs.next() ) {
+				User user = new User();
+				String status = rs.getString("theStatus");
+				
+				// Handle different respond
+				if(status.equals("admit") ) {
+					user.setId(rs.getInt("id"));
+					user.setEmail(rs.getString("email"));
+					user.setUsername(rs.getString("username"));
+					user.setPhoneNo(rs.getString("phone"));
+					user.setDateOfBirth(rs.getDate("birth"));
+					user.setGender(rs.getString("gender"));
+					user.setRole(rs.getString("role"));
+					
+					// Add to friends table
+					insertFriends(sender_id, user.getId());
+				}
+				else {
+					user.setUsername(rs.getString("username"));
+				}
+				
+				// Delete the handling request
+				int contact_id = rs.getInt("contact_id");
+				deleteContact(contact_id);
+				
+				// For debug
+				System.out.print("Reading contact " + user.getUsername() + " success!" );
+				System.out.println(" status is: " + status);
+				userList.add(user);
+			}
+			
+			rs.close();
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		
+		return userList;
+	}
+	
+	/**
+	 * Receiver gets all senders' request
+	 * @param receiver_id
+	 * @return senders
+	 */
+	public ArrayList<User> selectSender( int receiver_id ) {
+		ArrayList<User> userList = new ArrayList<User>();
+		String query = "select * from myUser a " +
+				"inner join contact b on a.id=b.sender " + 
+				"where b.theStatus=\'wait\' and b.receiver = ?";
+		
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, receiver_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			while( rs.next() ) {
+				User user = new User();
+				String status = rs.getString("theStatus");
+				
+				user.setId(rs.getInt("id"));
+				user.setEmail(rs.getString("email"));
+				user.setUsername(rs.getString("username"));
+				user.setPhoneNo(rs.getString("phone"));
+				user.setDateOfBirth(rs.getDate("birth"));
+				user.setGender(rs.getString("gender"));
+				user.setRole(rs.getString("role"));
+			
+				System.out.print("Reading contact " + user.getUsername() + " success!" );
+				System.out.println(" status is: " + status);
+				userList.add(user);
+			}
+			
+			rs.close();
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		
+		return userList;
+	}
+	
+	/**
 	 * Insert new User
 	 * If the user has not been created, the return will be -1.
 	 * @param user
@@ -249,6 +349,36 @@ public class JDBCadapter {
 
 		return id;
 	}
+
+	/**
+	 * Insert the add friend request to the contact table
+	 * @param sId
+	 * @param rId
+	 * @return rows affected
+	 */
+	public int insertContact(long sId, long rId) {
+		int count = -1;
+		String query = "INSERT IGNORE INTO contact"
+				+ "(sender, receiver, theStatus) VALUES"
+				+ "(?,?,?)";
+
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setLong(1, sId);
+			preparedStatement.setLong(2, rId);
+			preparedStatement.setString(3, "wait");
+			
+			// execute insert SQL statement
+			count = preparedStatement.executeUpdate();
+			
+            System.out.println("Add friends request is inserted into contact table!");    
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return count;
+	}
 	
 	/**
 	 * Update the user
@@ -285,6 +415,37 @@ public class JDBCadapter {
 	}
 	
 	/**
+	 * Update the contact
+	 * Receiver gives the responds
+	 * @param sId
+	 * @param rId
+	 * @param status
+	 * @return affected row count
+	 */
+	public int updateContact(long sId, long rId, String status) {
+		int ps = -1;
+		String query = "UPDATE contact SET "
+				+ "theStatus = ? "
+				+ "WHERE sender = ? and receiver = ?";
+
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, status);
+			preparedStatement.setLong(2, sId);
+			preparedStatement.setLong(3, rId);
+			
+			// execute insert SQL statement
+			ps = preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ps;	
+	}
+	
+	/**
 	 * Delete friends relationship
 	 * @param id1
 	 * @param id2
@@ -304,9 +465,29 @@ public class JDBCadapter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
+	/**
+	 * Delete contact request
+	 * @param id1
+	 * @param id2
+	 */
+	public void deleteContact(long id) {
+		String query = "DELETE FROM contact WHERE contact_id=?";
+
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setLong(1, id);
+
+			// execute insert SQL statement
+			preparedStatement.executeUpdate();
+			System.out.println("Delete one data in contact table!");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Convert util.Date to sql.Date
 	 * @param util.Date
