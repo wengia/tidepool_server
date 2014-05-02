@@ -29,13 +29,13 @@ public class TidepoolDatabase {
 	}
 	
 	/**
-	 * Return the data of the patient or patients associated with the parent
+	 * Return the data of the user and/or his friends
 	 * @param user
 	 * @return data
 	 */
 	public ArrayList<Data> getData(User user) {
 		if(user.getRole().equalsIgnoreCase("patient"))
-			return adapter.selectData((int)user.getId());
+			return adapter.selectData(user.getId());
 		
 		// Get the data of the patients associated with the parent
 		ArrayList<User> friends = adapter.selectFriends((int)user.getId());
@@ -47,12 +47,21 @@ public class TidepoolDatabase {
 	}
 	
 	/**
+	 * Return the data of the user
+	 * @param user_id
+	 * @return
+	 */
+	public ArrayList<Data> getData(long user_id) {
+		return adapter.selectData(user_id);
+	}
+	
+	/**
 	 * Find all friends of one user
-	 * @param uid
+	 * @param id
 	 * @return friends
 	 */
-	public ArrayList<User> getFriends(int uid) {
-		return adapter.selectFriends(uid);
+	public ArrayList<User> getFriends(long id) {
+		return adapter.selectFriends(id);
 	}
 	
 	/**
@@ -107,7 +116,7 @@ public class TidepoolDatabase {
 	 * @param rId
 	 * @return senders
 	 */
-	public ArrayList<User> getRequest(int rId) {
+	public ArrayList<User> getRequest(long rId) {
 		return adapter.selectSender( rId );
 	}
 	
@@ -129,7 +138,7 @@ public class TidepoolDatabase {
 	 * @param sId
 	 * @return receivers
 	 */
-	public ArrayList<User> getRespond(int sId) {
+	public ArrayList<User> getRespond(long sId) {
 		return adapter.selectReceiver( sId );
 	}
 	

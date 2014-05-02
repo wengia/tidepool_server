@@ -84,13 +84,13 @@ public class JDBCadapter {
 	 * @param user_id
 	 * @return data list
 	 */
-	public ArrayList<Data> selectData( int user_id ) {
+	public ArrayList<Data> selectData( long user_id ) {
 		ArrayList<Data> dataList = new ArrayList<Data>();
 		String query = "select * from myData " + "where uid = ?";
 		
 		try {
 			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setInt(1, user_id);
+			preparedStatement.setLong(1, user_id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			while( rs.next() ) {
@@ -117,19 +117,19 @@ public class JDBCadapter {
 	
 	/**
 	 * Select the friends of one user
-	 * @param user_id
+	 * @param id
 	 * @return friends
 	 */
-	public ArrayList<User> selectFriends( int user_id ) {
+	public ArrayList<User> selectFriends( long id ) {
 		ArrayList<User> friends = new ArrayList<User>();
 		
-		friends.addAll( selectFriends(user_id, true) );
-		friends.addAll( selectFriends(user_id, false) );
+		friends.addAll( selectFriends(id, true) );
+		friends.addAll( selectFriends(id, false) );
 		
 		return friends;
 	}
 	
-	private ArrayList<User> selectFriends( int user_id, boolean right ) {
+	private ArrayList<User> selectFriends( long user_id, boolean right ) {
 		ArrayList<User> userList = new ArrayList<User>();
 		String query1 = "select * from myUser a " +
 				"inner join friends b on a.id=b.uid1 " + 
@@ -143,7 +143,7 @@ public class JDBCadapter {
 				preparedStatement = connection.prepareStatement(query1);
 			else
 				preparedStatement = connection.prepareStatement(query2);
-			preparedStatement.setInt(1, user_id);
+			preparedStatement.setLong(1, user_id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			while( rs.next() ) {
@@ -179,7 +179,7 @@ public class JDBCadapter {
 	 * @param sender_id
 	 * @return receivers
 	 */
-	public ArrayList<User> selectReceiver( int sender_id ) {
+	public ArrayList<User> selectReceiver( long sender_id ) {
 		ArrayList<User> userList = new ArrayList<User>();
 		String query = "select * from myUser a " +
 				"inner join contact b on a.id=b.receiver " + 
@@ -187,7 +187,7 @@ public class JDBCadapter {
 		
 		try {
 			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setInt(1, sender_id);
+			preparedStatement.setLong(1, sender_id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			while( rs.next() ) {
@@ -235,7 +235,7 @@ public class JDBCadapter {
 	 * @param receiver_id
 	 * @return senders
 	 */
-	public ArrayList<User> selectSender( int receiver_id ) {
+	public ArrayList<User> selectSender( long receiver_id ) {
 		ArrayList<User> userList = new ArrayList<User>();
 		String query = "select * from myUser a " +
 				"inner join contact b on a.id=b.sender " + 
@@ -243,7 +243,7 @@ public class JDBCadapter {
 		
 		try {
 			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setInt(1, receiver_id);
+			preparedStatement.setLong(1, receiver_id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			while( rs.next() ) {

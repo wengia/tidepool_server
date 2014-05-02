@@ -5,8 +5,8 @@ create schema if not exists tidepool;
 /*drop table if exists tidepool.friends;
 drop table if exists tidepool.myData;
 drop table if exists tidepool.myUser;
-*/
 drop table if exists tidepool.contact;
+*/
 
 create table if not exists tidepool.myUser (
 	id INT NOT NULL AUTO_INCREMENT,
