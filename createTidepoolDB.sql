@@ -2,10 +2,9 @@
 
 create schema if not exists tidepool;
 
-/*drop table if exists tidepool.friends;
+drop table if exists tidepool.friends;
 drop table if exists tidepool.myData;
 drop table if exists tidepool.myUser;
-*/
 drop table if exists tidepool.contact;
 
 create table if not exists tidepool.myUser (
@@ -17,6 +16,8 @@ create table if not exists tidepool.myUser (
     birth DATE, 
     gender VARCHAR(10),
     role VARCHAR(10) NOT NULL,
+    location_lat DOUBLE,
+    location_lng DOUBLE,
 	PRIMARY KEY (id)
 );
 
@@ -72,7 +73,7 @@ create table if not exists tidepool.contact (
 	UNIQUE (sender, receiver)
 );
 
-/*
+
 insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
 value (1 ,'dummy1@gmail.com', 'dummy1', 'pwd', '1234567890', '1985-07-06', 'female', 'patient');
 insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
@@ -155,4 +156,3 @@ value ('2014-04-22 7:45', 180, 0, 3);
 insert ignore into tidepool.friends (uid1, uid2) value (2, 4);
 insert ignore into tidepool.friends (uid1, uid2) value (3, 4);
 insert ignore into tidepool.friends (uid1, uid2) value (4, 5);
-*/

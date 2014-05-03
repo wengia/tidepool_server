@@ -28,6 +28,10 @@ public class TidepoolDatabase {
 		return adapter.selectUser(email);
 	}
 	
+	public User getUser(long uid) {
+		return adapter.selectUser(uid);
+	}
+	
 	/**
 	 * Return the data of the patient or patients associated with the parent
 	 * @param user

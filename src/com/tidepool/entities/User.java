@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 
+@SuppressWarnings("serial")
 public class User implements Serializable {
 	private long id;
 	private String email;
@@ -14,7 +15,21 @@ public class User implements Serializable {
 	private Date dateOfBirth;
 	private String gender;
 	private String role;
+	private double location_lat;
+	private double location_lng;
 	
+	public double getLocation_lat() {
+		return location_lat;
+	}
+	public void setLocation_lat(double location_lat) {
+		this.location_lat = location_lat;
+	}
+	public double getLocation_lng() {
+		return location_lng;
+	}
+	public void setLocation_lng(double location_lng) {
+		this.location_lng = location_lng;
+	}
 	public long getId() {
 		return id;
 	}

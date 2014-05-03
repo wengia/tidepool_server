@@ -66,6 +66,41 @@ public class JDBCadapter {
 				user.setDateOfBirth(rs.getDate("birth"));
 				user.setGender(rs.getString("gender"));
 				user.setRole(rs.getString("role"));
+				user.setLocation_lat(rs.getDouble("location_lat"));
+				user.setLocation_lng(rs.getDouble("location_lng"));
+				
+				System.out.print("Reading user " + user.getUsername() + " success!" );
+				System.out.println(" Birthday is: " + user.getDateOfBirth());
+			}
+			
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		
+		return user;
+	}
+	
+	public User selectUser(long uid) {
+		User user = new User();
+		String query = "select * from myUser " + "where id = ?";
+		
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setLong(1, uid);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if( rs.next() ) {
+				user.setId(rs.getInt("id"));
+				user.setEmail(rs.getString("email"));
+				user.setUsername(rs.getString("username"));
+				user.setPassword(rs.getString("pwd"));
+				user.setPhoneNo(rs.getString("phone"));
+				user.setDateOfBirth(rs.getDate("birth"));
+				user.setGender(rs.getString("gender"));
+				user.setRole(rs.getString("role"));
+				user.setLocation_lat(rs.getDouble("location_lat"));
+				user.setLocation_lng(rs.getDouble("location_lng"));
 				
 				System.out.print("Reading user " + user.getUsername() + " success!" );
 				System.out.println(" Birthday is: " + user.getDateOfBirth());
@@ -389,7 +424,8 @@ public class JDBCadapter {
 	public int updateUser(User user) {
 		int ps = -1;
 		String query = "UPDATE myUser SET "
-				+ "email = ?, username = ?, pwd = ?, phone = ?, birth = ?, gender = ?, role =? "
+				+ "email = ?, username = ?, pwd = ?, phone = ?, birth = ?, gender = ?, role =?, "
+				+ "location_lat = ?, location_lng = ? "
 				+ "WHERE id = ?";
 
 		try {
@@ -401,7 +437,9 @@ public class JDBCadapter {
 			preparedStatement.setDate(5, convertToSqlDate(user.getDateOfBirth()));
 			preparedStatement.setString(6, user.getGender());
 			preparedStatement.setString(7, user.getRole());
-			preparedStatement.setLong(8, user.getId());
+			preparedStatement.setDouble(8, user.getLocation_lat());
+			preparedStatement.setDouble(9, user.getLocation_lng());
+			preparedStatement.setLong(10, user.getId());
 			
 			// execute insert SQL statement
 			ps = preparedStatement.executeUpdate();
