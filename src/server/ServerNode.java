@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.tidepool.entities.User;
@@ -188,8 +189,13 @@ public class ServerNode {
 
 		public void sendData() {
 			try {
-				out.writeObject(db.getData(user));
+				out.writeObject("userId");
+				long id = (long) in.readObject();
+				out.writeObject(db.getData(id));
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -204,7 +210,7 @@ public class ServerNode {
 				// Add the user
 				User user = db.getUser(uid); 
 				out.writeObject(user);
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
@@ -214,7 +220,7 @@ public class ServerNode {
 
 		public void sendFriends() {
 			try {
-				out.writeObject(db.getFriends((int)user.getId()));
+				out.writeObject(db.getFriends(user.getId()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -257,7 +263,7 @@ public class ServerNode {
 			}
 		}
 
-		public void addFriend() {
+		public void sendRequest() {
 			try {
 				out.writeObject("friend email");
 				long id1 = user.getId();
@@ -266,17 +272,66 @@ public class ServerNode {
 				//Find the friend in the database
 				User friend = db.getUser(friendEmail);
 				if(friendEmail==null || friend==null) {
-					out.writeObject("No such friend!");
+					out.writeObject("No such user!");
 					return;
 				}
 
-				// Add the friend relationship
-				db.addFriend(id1, friend.getId());
-				out.writeObject("success");
+				// Add the request to contact
+				int res = db.sendRequest(id1, friend.getId());
+				out.writeObject(res);
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		public void receiveRequest() {
+			try {
+				// Return the request list to receiver
+				ArrayList<User> res = db.getRequest(user.getId());
+				out.writeObject(res);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		public void sendRespond() {
+			try {
+				out.writeObject("sender id");
+				long friendId = (long) in.readObject();
+
+				//Get the respond, either "admit" or "refuse"
+				out.writeObject("respond");
+				String status = (String) in.readObject();
+				if(!(status.equals("admit") || status.equals("refuse")))
+					return;
+
+				// Update the request to contact
+				int res = db.setRespond(friendId, user.getId(), status);
+				out.writeObject(res);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		public void receiveRespond() {
+			try {
+				// Get the respond from receivers
+				ArrayList<User> res = db.getRespond(user.getId());
+				out.writeObject(res);
+
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -323,7 +378,12 @@ public class ServerNode {
 					if(tmp.equalsIgnoreCase("sendUser")) sendUser();
 					if(tmp.equalsIgnoreCase("sendFriends")) sendFriends();
 					if(tmp.equalsIgnoreCase("chat")) sendMsgProcess();
-					if(tmp.equalsIgnoreCase("addFriend")) addFriend();
+
+					//For add friends
+					if(tmp.equalsIgnoreCase("sendRequest")) sendRequest();
+					if(tmp.equalsIgnoreCase("receiveRequest")) receiveRequest();
+					if(tmp.equalsIgnoreCase("sendRespond")) sendRespond();
+					if(tmp.equalsIgnoreCase("receiveRespond")) receiveRespond();
 					if(tmp.equalsIgnoreCase("deleteFriend")) deleteFriend();
 
 				}
