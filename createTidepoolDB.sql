@@ -6,7 +6,7 @@ drop table if exists tidepool.friends;
 drop table if exists tidepool.myData;
 drop table if exists tidepool.myUser;
 drop table if exists tidepool.contact;
-*/
+
 
 create table if not exists tidepool.myUser (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -85,6 +85,10 @@ insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gend
 value (4, 'dummy4@gmail.com', 'dummy4', 'pwd', '1234567890', '1956-07-21', 'female', 'parent');
 insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
 value (5, 'dummy5@gmail.com', 'dummy5', 'pwd', '1234567890', '1991-12-06', 'male', 'patient');
+insert into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
+value (6, 'wenjia.ma@west.cmu.edu', 'wenjia', 'pwd', '6504229820', '1990-07-06', 'female', 'patient');
+insert into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
+value (7 ,'jingyi.li@west.cmu.edu', 'jingyi', 'pwd', '4129805715', '1975-04-06', 'female', 'parent');
 
 
 -- dummy data for dummy0
