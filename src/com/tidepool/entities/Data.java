@@ -47,9 +47,4 @@ public class Data implements Serializable {
 	public void setChatId(int chatId) {
 		this.chatId = chatId;
 	}
-	
-	
-	
-	
-
 }

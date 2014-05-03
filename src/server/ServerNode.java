@@ -157,7 +157,7 @@ public class ServerNode {
 				// Save and send back the user id
 				user.setId(id);
 				allClients.put(email, this);
-				out.writeObject(id);
+				out.writeObject(String.valueOf(id));
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
