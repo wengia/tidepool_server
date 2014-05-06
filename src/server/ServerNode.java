@@ -176,6 +176,8 @@ public class ServerNode {
 
 				// Add the user
 				int res = db.updateUser(user);
+				System.out.println("lat is " + user.getLocation_lat());
+				System.out.println("lng is " + user.getLocation_lng());
 				out.writeObject(res);
 
 			} catch (IOException e) {
