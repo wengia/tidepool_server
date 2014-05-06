@@ -309,7 +309,9 @@ public class ServerNode {
 				//Get the respond, either "admit" or "refuse"
 				out.writeObject("respond");
 				String status = (String) in.readObject();
-				if(!(status.equals("admit") || status.equals("refuse")))
+				if(status.equals("admit"))
+					db.addFriend(user.getId(), friendId);
+				else if(!status.equals("refuse")) // Error
 					return;
 
 				// Update the request to contact
