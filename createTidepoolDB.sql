@@ -2,12 +2,11 @@
 
 create schema if not exists tidepool;
 
+/*drop table if exists tidepool.contact;
 drop table if exists tidepool.friends;
 drop table if exists tidepool.myData;
 drop table if exists tidepool.myUser;
-drop table if exists tidepool.contact;
-
-
+*/
 create table if not exists tidepool.myUser (
 	id INT NOT NULL AUTO_INCREMENT,
     email VARCHAR(50) NOT NULL UNIQUE,
@@ -85,13 +84,45 @@ insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gend
 value (4, 'dummy4@gmail.com', 'dummy4', 'pwd', '1234567890', '1956-07-21', 'female', 'parent');
 insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
 value (5, 'dummy5@gmail.com', 'dummy5', 'pwd', '1234567890', '1991-12-06', 'male', 'patient');
-insert into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
+insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
 value (6, 'wenjia.ma@west.cmu.edu', 'wenjia', 'pwd', '6504229820', '1990-07-06', 'female', 'patient');
-insert into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
+insert ignore into tidepool.myUser (id, email, username, pwd, phone, birth, gender, role ) 
 value (7 ,'jingyi.li@west.cmu.edu', 'jingyi', 'pwd', '4129805715', '1975-04-06', 'female', 'parent');
 
+-- dummy data for wenjia
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:05', 65, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:10', 55, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:15', 53, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:20', 68, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:25', 70, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:30', 85, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:35', 150, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:40', 170, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:45', 180, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:50', 200, 15, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 7:55', 250, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 8:00', 310, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 8:05', 240, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 8:10', 180, 0, 6);
+insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
+value ('2014-04-22 8:15', 179, 0, 6);
 
--- dummy data for dummy0
+
+-- dummy data for dummy5
 insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
 value ('2014-04-22 7:05', 28, 0, 5);
 insert ignore into tidepool.myData (theTime, BG, insulin, uid) 
